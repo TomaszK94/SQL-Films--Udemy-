@@ -1,0 +1,138 @@
+/*
+    AS statment
+*/
+
+SELECT
+    COUNT(amount) AS num_transactions
+FROM
+    payment;
+
+
+
+SELECT
+    customer_id,
+    SUM(amount) AS total_spent
+FROM
+    payment
+GROUP BY
+    customer_id;
+
+
+
+SELECT
+    customer_id,
+    SUM(amount) AS total_spent
+FROM
+    payment
+GROUP BY
+    customer_id
+HAVING SUM(amount) > 100;  -- nie możemy posługiwać się AS total_spent --> AS total_spent wykonuje się na samym końcu więc nie istnieje podczas HAVING statment
+
+
+SELECT 
+    customer_id,
+    amount AS new_name
+FROM
+    payment
+WHERE
+    amount > 2;  -- tak jak wyżej
+
+
+/*
+    INNER JOIN
+*/
+
+SELECT 
+    payment_id,
+    payment.customer_id,
+    first_name,
+    last_name,
+    email
+FROM
+    payment
+INNER JOIN customer ON payment.customer_id = customer.customer_id;
+
+
+/*
+    OUTER JOINs
+*/
+
+-- FULL OUTER JOIN
+-- RAZEM ZBIÓR A I B
+-- FULL OUTER JOIN with WHERE --> unikatowe wartości z kolumny A oraz B --> A + B bez cześci wspólnej
+SELECT *
+FROM 
+    tableA
+FULL OUTER JOIN tableB ON tableA.col_match = tableB.col_match
+WHERE 
+    tableA.id IS null OR
+    tableB.id is null
+
+--------------------------
+SELECT *
+FROM 
+    customer
+FULL OUTER JOIN payment ON customer.customer_id = payment.customer_id
+WHERE
+    customer.customer_id IS null OR
+    payment.payment_id IS null;
+-- nie ma unikatowych wartości wszystkie wyniki należą do części wspólnej 
+SELECT
+    COUNT(DISTINCT customer_id)
+FROM
+    payment;
+
+SELECT
+    COUNT(DISTINCT customer_id)
+FROM
+    customer;
+-- Tyle samo customer_id w tabeli payment oraz customer
+
+
+-- LEFT OUTER JOIN
+-- SAM ZBIÓR A, który może mieć cześć wspólną z B
+-- LEFT JOIN with WHERE --> unikatowe wartości będące tylko w zbiorze A --> A bez części wspólnej z B
+SELECT *
+FROM 
+    tableA
+LEFT JOIN tableB ON tableA.col_match = tableB.com_match
+WHERE
+    tableB.id is null
+
+---------------------------
+SELECT 
+    film.film_id,
+    title,
+    inventory_id,
+    store_id
+FROM
+    film
+LEFT JOIN inventory ON inventory.film_id = film.film_id;
+
+
+SELECT 
+    film.film_id,
+    title,
+    inventory_id,
+    store_id
+FROM
+    film
+LEFT JOIN inventory ON inventory.film_id = film.film_id
+WHERE 
+    inventory.film_id IS null;
+
+
+-- RIGHT OUTER JOIN
+-- identycznie jak w LEFT JOIN tylko zmiana tabel --> tabela B(prawa) jest tą dołanczaną przez JOINa
+
+
+/*
+    UNIONS
+*/
+
+SELECT *
+FROM 
+    tableA
+UNION
+SELECT *
+FROM tableB
