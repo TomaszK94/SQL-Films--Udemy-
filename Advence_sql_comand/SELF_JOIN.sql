@@ -19,4 +19,3 @@ FROM
 INNER JOIN film AS f2 ON f1.length = f2.length 
 AND f1.film_id != f2.film_id;
 ----------------------------
-
